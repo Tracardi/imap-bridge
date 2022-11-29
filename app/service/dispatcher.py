@@ -11,7 +11,7 @@ from tracardi.domain.payload.tracker_payload import TrackerPayload
 from tracardi.domain.time import Time
 from tracardi.service.event_source_manager import save_source
 from tracardi.service.storage.driver import storage
-from tracardi.service.tracker import synchronized_event_tracking
+from tracardi.service.tracker import track_event
 
 from app import config
 
@@ -84,8 +84,10 @@ class EventDispatcher:
                 options={"saveSession": False}
             )
 
-            return await synchronized_event_tracking(tracker_payload, self._local_ip(), profile_less=True,
-                                                     allowed_bridges=['imap'])
+            return await track_event(tracker_payload,
+                                     self._local_ip(),
+                                     profile_less=True,
+                                     allowed_bridges=['imap'])
         except Exception as e:
             logger.error(str(e))
 
